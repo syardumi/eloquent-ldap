@@ -16,7 +16,7 @@ that the user is a member of.
 Via Composer
 
 ``` bash
-$ composer require sroutier/eloquent-ldap
+$ composer require syardumi/my-eloquent-ldap
 ```
 
 ## Publish assets
@@ -24,7 +24,7 @@ $ composer require sroutier/eloquent-ldap
 To publish the assets, config file and migration scripts, run this command:
 
 ``` bash
-$ php artisan vendor:publish --provider="Sroutier\EloquentLDAP\Providers\EloquentLDAPServiceProvider"
+$ php artisan vendor:publish --provider="Syardumi\EloquentLDAP\Providers\EloquentLDAPServiceProvider"
 ```
 
 This will publish a config file and a migration file.
