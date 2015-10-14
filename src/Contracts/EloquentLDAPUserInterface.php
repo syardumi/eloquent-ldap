@@ -1,6 +1,6 @@
 <?php
 
-namespace Sroutier\EloquentLDAP\Contracts;
+namespace Syardumi\EloquentLDAP\Contracts;
 
 interface EloquentLDAPUserInterface
 {

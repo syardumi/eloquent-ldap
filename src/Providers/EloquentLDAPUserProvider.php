@@ -1,6 +1,6 @@
 <?php
 
-namespace Sroutier\EloquentLDAP\Providers;
+namespace Syardumi\EloquentLDAP\Providers;
 
 use Illuminate\Support\Str;
 use Illuminate\Contracts\Auth\UserProvider;
@@ -240,9 +240,12 @@ class EloquentLDAPUserProvider implements UserProvider
             $userModel = $this->createUserModel();
             $user = $userModel->create(array(
                 'username'   => $userName,
+                'name'       => $firstName.' '.$lastName,
                 'first_name' => $firstName,
                 'last_name'  => $lastName,
                 'email'      => $email,
+                'confirmed'  => true,
+                'status'     => 1,
                 'password'   => 'Laravel Rock! ASP.Net blows! ' . date("Y-m-d H:i:s"),
                 'auth_type'  => $this->ldapConfig['label_ldap'],
                 ));
@@ -253,10 +256,16 @@ class EloquentLDAPUserProvider implements UserProvider
                 $user->enabled = false;
             }
             $user->save();
-
-            if ($this->ldapConfig['replicate_group_membership']) {
-                $this->replicateMembershipFromLDAP($user);
+            
+            $groupModel = $this->createGroupModel();
+            $localGroup = $groupModel->where('name', 'Users')->firstOrFail();
+            if ( !$user->isMemberOf('Users') ) {
+                $user->membershipList()->attach($localGroup->id);
             }
+
+            //if ($this->ldapConfig['replicate_group_membership']) {
+            //    $this->replicateMembershipFromLDAP($user);
+            //}
         }
 
         return $user;
@@ -427,10 +436,10 @@ class EloquentLDAPUserProvider implements UserProvider
     {
         try {
 
-            foreach($user->membershipList as $group) {
-                if ($group->resync_on_login) {
+            foreach($user->membershipList() as $group) {
+                //if ($group->resync_on_login) {
                     $user->membershipList()->detach($group);
-                }
+                //}
             }
 
         } catch (\Exception $ex) {
@@ -481,6 +490,7 @@ class EloquentLDAPUserProvider implements UserProvider
                     // Mute the exception as we expect not to find all groups.
                 }
             }
+            
 
         } catch (\Exception $ex) {
             Log::error('Exception replicating group membership for user: ' . $user->username . ', Exception message: ' . $ex->getMessage());

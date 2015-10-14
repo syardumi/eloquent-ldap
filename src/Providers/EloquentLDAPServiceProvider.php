@@ -1,6 +1,6 @@
 <?php
 
-namespace Sroutier\EloquentLDAP\Providers;
+namespace Syardumi\EloquentLDAP\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\Hashing\Hasher as HasherContract;

@@ -33,6 +33,7 @@ class EloquentLdapSetupTables extends Migration
         // USERS: Add the auth_type column.
         Schema::table('users', function (Blueprint $table) {
             $table->string('auth_type')->nullable();
+            $table->boolean('enabled')->default(true);
         });
 
         //=======
@@ -80,6 +81,7 @@ class EloquentLdapSetupTables extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('auth_type');
+            $table->dropColumn('enabled');
         });
 
         // Uncomment the section below if the users table was created above.
